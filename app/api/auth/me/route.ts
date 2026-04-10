@@ -21,7 +21,7 @@ export async function GET() {
     id: ouder.id,
     email: ouder.email,
     naam: ouder.naam,
-    kinderenIds: ouder.kinderen.map((k) => k.id),
+    kinderenIds: ouder.kinderen.map((k: { id: string }) => k.id),
     aangemeldOp: ouder.aangemeldOp.toISOString(),
   });
 }
