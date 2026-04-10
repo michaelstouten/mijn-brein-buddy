@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Ouder {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  naam        String
+  wachtwoord  String
+  aangemeldOp DateTime @default(now())
+  kinderen    Kind[]
+}
+
+model Kind {
+  id         String           @id @default(cuid())
+  naam       String
+  leeftijd   Int
+  groep      Int
+  kleur      String
+  streak     Int              @default(0)
+  lastActief DateTime?
+  ouder      Ouder            @relation(fields: [ouderId], references: [id], onDelete: Cascade)
+  ouderId    String
+  scores     OefeningScore[]
+  pogingen   OefeningPoging[]
+}
+
+model GeslagenOefening {
+  id           String           @id @default(cuid())
+  vak          String
+  groep        Int
+  niveau       Int
+  vraag        String
+  type         String
+  opties       String?
+  antwoord     String
+  uitleg       String
+  aangemaaktOp DateTime         @default(now())
+  pogingen     OefeningPoging[]
+}
+
+model OefeningPoging {
+  id         String           @id @default(cuid())
+  datum      DateTime         @default(now())
+  goed       Boolean
+  kind       Kind             @relation(fields: [kindId], references: [id], onDelete: Cascade)
+  kindId     String
+  oefening   GeslagenOefening @relation(fields: [oefeningId], references: [id], onDelete: Cascade)
+  oefeningId String
+}
+
+model OefeningScore {
+  id           String   @id @default(cuid())
+  datum        DateTime @default(now())
+  vak          String
+  niveau       Int
+  aantalGoed   Int
+  aantalTotaal Int
+  duurSeconden Int
+  kind         Kind     @relation(fields: [kindId], references: [id], onDelete: Cascade)
+  kindId       String
+}

@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls /home/michael/mijn-brein-buddy/.env*)",
+      "Bash(pg_isready -h localhost -p 5432)"
+    ]
+  }
+}
