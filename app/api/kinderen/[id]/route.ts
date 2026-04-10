@@ -21,6 +21,9 @@ export async function GET(
   return NextResponse.json({
     ...kind,
     lastActief: kind.lastActief ? kind.lastActief.toISOString() : null,
-    scores: kind.scores.map((s) => ({ ...s, datum: s.datum.toISOString() })),
+    scores: kind.scores.map((s: { id: string; datum: Date; vak: string; niveau: number; aantalGoed: number; aantalTotaal: number; duurSeconden: number; kindId: string }) => ({
+      ...s,
+      datum: s.datum.toISOString(),
+    })),
   });
 }
