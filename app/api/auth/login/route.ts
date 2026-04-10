@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
 
   const kinderenIds = (
     await prisma.kind.findMany({ where: { ouderId: ouder.id }, select: { id: true } })
-  ).map((k) => k.id);
+  ).map((k: { id: string }) => k.id);
 
   const token = await createToken(ouder.id);
 
