@@ -23,6 +23,8 @@ export default function OefeningPage() {
   const [bevestigd, setBevestigd] = useState(false);
   const [isGoed, setIsGoed] = useState<boolean | null>(null);
   const [aantalGoed, setAantalGoed] = useState(0);
+  const aantalGoedRef = useRef(0); // ref to avoid stale closure when saving score
+  const bevestigdRef = useRef(false); // ref guard against double-click race condition
   const [startTijd] = useState(() => Date.now());
   const [foutMelding, setFoutMelding] = useState('');
   const tekstInputRef = useRef<HTMLInputElement>(null);
@@ -47,6 +49,8 @@ export default function OefeningPage() {
     setBevestigd(false);
     setIsGoed(null);
     setAantalGoed(0);
+    aantalGoedRef.current = 0;
+    bevestigdRef.current = false;
     setHuidigIndex(0);
 
     // Check sessionStorage cache (skip on explicit refresh)
@@ -105,12 +109,16 @@ export default function OefeningPage() {
   }
 
   function bevestigAntwoord() {
-    if (!antwoord.trim() || bevestigd) return;
+    if (!antwoord.trim() || bevestigdRef.current) return;
+    bevestigdRef.current = true; // set ref immediately, before any async re-render
     const huidige = oefeningen[huidigIndex];
     const goed = antwoord.trim().toLowerCase() === huidige.antwoord.trim().toLowerCase();
     setIsGoed(goed);
     setBevestigd(true);
-    if (goed) setAantalGoed((prev) => prev + 1);
+    if (goed) {
+      aantalGoedRef.current += 1;
+      setAantalGoed(aantalGoedRef.current);
+    }
 
     // Record poging in DB (fire and forget)
     fetch('/api/oefening/poging', {
@@ -126,14 +134,14 @@ export default function OefeningPage() {
       setHuidigIndex((prev) => prev + 1);
       setAntwoord('');
       setGeselecteerdeOptieIndex(null);
+      bevestigdRef.current = false;
       setBevestigd(false);
       setIsGoed(null);
       setTimeout(() => tekstInputRef.current?.focus(), 100);
     } else {
       const duur = Math.round((Date.now() - startTijd) / 1000);
       const niveau = store.getBerekenNiveau(kind!, vak as Vak);
-      const eindScore = aantalGoed + (isGoed ? 1 : 0);
-      await store.slaScoreOp(kind!.id, vak as Vak, niveau, eindScore, oefeningen.length, duur);
+      await store.slaScoreOp(kind!.id, vak as Vak, niveau, aantalGoedRef.current, oefeningen.length, duur);
       // Clear session cache so next session fetches fresh questions
       try { if (cacheSleutel) sessionStorage.removeItem(cacheSleutel); } catch { /* ignore */ }
       setFase('resultaat');
