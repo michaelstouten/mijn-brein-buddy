@@ -41,7 +41,7 @@ export default function HomePage() {
               href="/registreer"
               className="text-sm font-bold bg-primary text-white px-4 py-2 rounded-full shadow-btn hover:bg-primary-dark active:scale-95 transition-all"
             >
-              Gratis starten
+              Registreren
             </Link>
           </div>
         </div>
@@ -156,12 +156,12 @@ export default function HomePage() {
         {/* CTA bottom */}
         <section className="py-16 px-6 text-center">
           <h2 className="text-2xl font-extrabold text-foreground mb-3">Klaar om te beginnen?</h2>
-          <p className="text-sm text-muted-DEFAULT mb-6">Gratis voor ouders — geen creditcard nodig.</p>
+          <p className="text-sm text-muted-DEFAULT mb-6">Begin vandaag nog met oefenen.</p>
           <Link
             href="/registreer"
             className="inline-flex items-center gap-2 bg-primary text-white font-bold text-base px-8 py-4 rounded-full shadow-btn hover:bg-primary-dark active:scale-95 transition-all"
           >
-            🌟 Maak gratis een account
+            🌟 Registreren
           </Link>
         </section>
 
@@ -169,22 +169,60 @@ export default function HomePage() {
 
       {/* ── Footer ── */}
       <footer className="border-t border-border bg-white">
-        <div className="max-w-4xl mx-auto px-6 py-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <Link href="/" className="flex items-center gap-2 group">
-              <Mascot kleur="#F07329" modus="blij" grootte={28} />
-              <span className="font-extrabold text-sm text-foreground group-hover:opacity-70 transition-opacity">
-                Mijn Brein Buddy
-              </span>
-            </Link>
-            <p className="text-xs text-muted-DEFAULT text-center leading-relaxed max-w-sm">
-              Mijn Brein Buddy is een educatief hulpmiddel voor thuisgebruik. De inhoud wordt gegenereerd
-              door AI en is bedoeld als aanvulling op het onderwijs, niet als vervanging.
+        <div className="max-w-4xl mx-auto px-6 py-10">
+
+          {/* Top row */}
+          <div className="flex flex-col md:flex-row items-start justify-between gap-8 mb-8">
+
+            {/* Brand */}
+            <div className="flex flex-col gap-2">
+              <Link href="/" className="flex items-center gap-2 group">
+                <Mascot kleur="#F07329" modus="blij" grootte={28} />
+                <span className="font-extrabold text-sm text-foreground group-hover:opacity-70 transition-opacity">
+                  Mijn Brein Buddy
+                </span>
+              </Link>
+              <p className="text-xs text-muted-DEFAULT leading-relaxed max-w-[200px]">
+                Gemaakt met ❤️ door Papa Stouten
+              </p>
+            </div>
+
+            {/* Colofon */}
+            <div className="flex flex-col gap-1.5">
+              <p className="text-xs font-bold text-foreground uppercase tracking-wide mb-1">Colofon</p>
+              <p className="text-xs text-muted-DEFAULT leading-relaxed max-w-xs">
+                Mijn Brein Buddy is een persoonlijk project ontwikkeld voor educatief thuisgebruik.
+              </p>
+              <p className="text-xs text-muted-DEFAULT leading-relaxed max-w-xs">
+                De oefeningen worden gegenereerd door kunstmatige intelligentie (AI) en zijn bedoeld
+                als aanvulling op het reguliere onderwijs, niet als vervanging.
+              </p>
+              <p className="text-xs text-muted-DEFAULT leading-relaxed max-w-xs">
+                Ontwerp &amp; ontwikkeling: Papa Stouten. Gebouwd met Next.js, Prisma en Claude AI.
+              </p>
+            </div>
+
+            {/* Disclaimer */}
+            <div className="flex flex-col gap-1.5">
+              <p className="text-xs font-bold text-foreground uppercase tracking-wide mb-1">Disclaimer</p>
+              <p className="text-xs text-muted-DEFAULT leading-relaxed max-w-xs">
+                De gegenereerde inhoud is indicatief. Controleer antwoorden altijd samen met uw kind.
+                Mijn Brein Buddy is niet verantwoordelijk voor eventuele onjuistheden in de oefeningen.
+              </p>
+            </div>
+
+          </div>
+
+          {/* Bottom row */}
+          <div className="border-t border-border/50 pt-5 flex flex-col md:flex-row items-center justify-between gap-2">
+            <p className="text-xs text-muted-DEFAULT">
+              © {new Date().getFullYear()} Mijn Brein Buddy — alle rechten voorbehouden
             </p>
-            <p className="text-xs text-muted-DEFAULT whitespace-nowrap">
-              © {new Date().getFullYear()} Mijn Brein Buddy
+            <p className="text-xs text-muted-DEFAULT">
+              Gemaakt met ❤️ door Papa Stouten
             </p>
           </div>
+
         </div>
       </footer>
 
