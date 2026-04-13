@@ -16,18 +16,26 @@ const VAK_BESCHRIJVINGEN: Record<Vak, string> = {
   spelling:
     'spellingsoefeningen voor Nederlandse woorden. Vraag het kind om het juiste gespelde woord te kiezen of een woord te schrijven. Gebruik moeilijkheden passend bij de groep.',
   logica:
-    'logische redeneeropgaven, getallenreeksen, patroonherkenning en eenvoudige puzzels. Geen rekensommen, maar denkvragen.',
+    `Logische denkvragen passend bij de basisschool. Gebruik uitsluitend de volgende vraagtypen:
+- Getallenreeksen: "Welk getal ontbreekt? 2, 4, 6, __, 10" → antwoord: "8"
+- Analogieën: "Kat staat tot mauwen als hond staat tot ___" → antwoord: "blaffen"
+- Categorieën/uitzondering: "Welk woord hoort er niet bij: appel, peer, wortel, banaan?" → antwoord: "wortel"
+- Redeneren: "Als alle katten dieren zijn, en Pluisje een kat is — is Pluisje dan een dier?" → antwoord: "ja"
+- Woordpatronen: "Roos, tulp, dahlia — wat is het verband?" → antwoord: "bloemen"
+Gebruik GEEN rekensommen, GEEN anatomische vragen over lichaamsdelen, GEEN vragen die fysieke handelingen vereisen.
+Vragen moeten volledig begrijpelijk zijn uit de tekst alleen, zonder afbeeldingen of fysieke aanwijzingen.
+Antwoorden zijn altijd kort en precies — één woord of getal waar mogelijk.`,
 };
 
 const GROEP_BESCHRIJVINGEN: Record<number, string> = {
-  1: 'kleuters (4-5 jaar), zeer eenvoudig, tellen tot 10, eenvoudste woorden',
-  2: 'kleuters (5-6 jaar), tellen tot 20, eenvoudige woorden herkennen',
-  3: 'eerste klas (6-7 jaar), optellen tot 20, eenvoudige zinnen, eerste woordjes schrijven',
-  4: 'tweede klas (7-8 jaar), optellen en aftrekken tot 100, tafels van 2/5/10, eenvoudige spelling',
-  5: 'derde klas (8-9 jaar), tafels tot 10, vermenigvuldigen, langere teksten, spelling van verdubbeling',
-  6: 'vierde klas (9-10 jaar), delen, breuken introductie, complexere spelling, grammatica',
-  7: 'vijfde klas (10-11 jaar), procenten, decimalen, complexe grammatica, werkwoordsvormen',
-  8: 'zesde klas (11-12 jaar), verhoudingen, algebra introductie, complexe teksten en werkwoorden',
+  1: 'kleuters (4-5 jaar), zeer eenvoudig, tellen tot 10, eenvoudste woorden. Voor logica: simpele reeksen (rood, blauw, rood, blauw, ___?), wat hoort er niet bij uit 3 dingen.',
+  2: 'kleuters (5-6 jaar), tellen tot 20, eenvoudige woorden herkennen. Voor logica: eenvoudige reeksen met vormen of kleuren, simpele categorieën (dieren/voedsel/voertuigen).',
+  3: 'eerste klas (6-7 jaar), optellen tot 20, eenvoudige zinnen. Voor logica: getallenreeksen tot 20 (stappen van 2 of 5), uitzondering uit 4 woorden aanwijzen.',
+  4: 'tweede klas (7-8 jaar), optellen en aftrekken tot 100, tafels van 2/5/10. Voor logica: getallenreeksen met stap 2/5/10, eenvoudige analogieën (kat→mauwen, hond→?).',
+  5: 'derde klas (8-9 jaar), tafels tot 10, vermenigvuldigen. Voor logica: getallenreeksen met wisselende stappen, analogieën met categorieën, eenvoudig redeneren.',
+  6: 'vierde klas (9-10 jaar), delen, breuken introductie. Voor logica: complexere reeksen, analogieën met meerdere stappen, syllogismen (Als A dan B...).',
+  7: 'vijfde klas (10-11 jaar), procenten, decimalen. Voor logica: reeksen met vermenigvuldiging/deling, woordanalogieën, redeneerketens.',
+  8: 'zesde klas (11-12 jaar), verhoudingen, algebra introductie. Voor logica: complexe analogieën, meerstaps redeneren, patroonherkenning in reeksen met meerdere regels.',
 };
 
 const TOTAAL_VRAGEN = 5;
@@ -105,7 +113,9 @@ Regels:
 - Als meerdere antwoorden correct kunnen zijn bij type "tekst" (bijv. "kat" én "poes"), zet ze dan gescheiden door een | in het antwoordveld: "kat|poes" — de eerste is het hoofdantwoord dat getoond wordt als feedback
 - Uitleg is kort en begrijpelijk voor een kind
 - De vraag en het antwoord moeten altijd logisch op elkaar aansluiten: als de zin "Ik eet een boterham" is, vraag dan "Wat eet ik?" en NIET "Wat eet het kind?" — gebruik dezelfde persoon/context als in de zin
+- Het antwoord moet het meest precieze woord zijn dat exact past bij de omschrijving in de vraag — als de vraag een specifiek onderdeel beschrijft (bijv. "tussen de hand en de elleboog"), dan is het antwoord het specifieke woord (bijv. "onderarm"), NIET een algemenere term (bijv. "arm")
 ${vak === 'rekenen' ? '- Voor rekenen: de vraag is ALTIJD een korte som zoals "7 × 8 =", "45 − 18 =" of "120 ÷ 6 =". Geen verhalen of woordproblemen.' : ''}
+${vak === 'logica' ? '- Voor logica: gebruik ALLEEN de toegestane vraagtypen (reeksen, analogieën, categorieën, redeneren). GEEN lichaamsdelen, GEEN fysieke handelingen, GEEN rekensommen. Het antwoord is altijd een kort, eenduidig Nederlands woord of getal. Controleer dat het antwoord exact en volledig klopt met de vraag.' : ''}
 
 Antwoord ALLEEN met geldige JSON in dit exacte formaat (geen uitleg, geen markdown):
 [
