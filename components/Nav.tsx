@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { SignOut, UserCirclePlus } from '@phosphor-icons/react';
+import { SignOut, GearSix } from '@phosphor-icons/react';
 import { Mascot } from '@/components/Mascot';
 import { store } from '@/lib/store';
 
@@ -15,7 +15,7 @@ export function Nav({ ouderNaam }: NavProps) {
 
   async function handleUitloggen() {
     await store.uitloggen();
-    router.push('/inloggen');
+    router.push('/');
   }
 
   return (
@@ -28,11 +28,12 @@ export function Nav({ ouderNaam }: NavProps) {
       <div className="flex items-center gap-2">
         {ouderNaam && (
           <Link
-            href="/kind/nieuw"
-            className="hidden md:flex items-center gap-1.5 text-xs font-semibold text-foreground bg-white border border-border rounded-full px-4 py-2 shadow-card hover:shadow-card-hover transition-all"
+            href="/instellingen"
+            className="flex items-center gap-1.5 text-xs font-semibold text-foreground bg-white border border-border rounded-full px-3 py-2 shadow-card hover:shadow-card-hover transition-all"
+            title="Instellingen"
           >
-            <UserCirclePlus size={15} />
-            Kind toevoegen
+            <GearSix size={15} />
+            <span className="hidden md:block">Instellingen</span>
           </Link>
         )}
         <button

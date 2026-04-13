@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, SpeakerHigh } from '@phosphor-icons/react';
+import { ArrowLeft } from '@phosphor-icons/react';
 import { store } from '@/lib/store';
 import { VAK_INFO, type Oefening, type Kind, type Vak } from '@/lib/types';
 import { Mascot } from '@/components/Mascot';
@@ -99,20 +99,12 @@ export default function OefeningPage() {
     laadOefeningen();
   }, [laadOefeningen, kind, router, vakInfo]);
 
-  function speakVraag(tekst: string) {
-    if (typeof window === 'undefined' || !window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    const utt = new SpeechSynthesisUtterance(tekst);
-    utt.lang = 'nl-NL';
-    utt.rate = 0.9;
-    window.speechSynthesis.speak(utt);
-  }
-
   function bevestigAntwoord() {
     if (!antwoord.trim() || bevestigdRef.current) return;
     bevestigdRef.current = true; // set ref immediately, before any async re-render
     const huidige = oefeningen[huidigIndex];
-    const goed = antwoord.trim().toLowerCase() === huidige.antwoord.trim().toLowerCase();
+    const geaccepteerd = huidige.antwoord.split('|').map((a) => a.trim().toLowerCase());
+    const goed = geaccepteerd.includes(antwoord.trim().toLowerCase());
     setIsGoed(goed);
     setBevestigd(true);
     if (goed) {
@@ -129,7 +121,6 @@ export default function OefeningPage() {
   }
 
   async function volgende() {
-    if (typeof window !== 'undefined') window.speechSynthesis?.cancel();
     if (huidigIndex < oefeningen.length - 1) {
       setHuidigIndex((prev) => prev + 1);
       setAntwoord('');
@@ -256,19 +247,10 @@ export default function OefeningPage() {
 
                 {/* Question card */}
                 <div className="bg-white rounded-3xl shadow-card p-5 mb-4">
-                  <div className="flex items-start gap-3 mb-5">
+                  <div className="flex items-start mb-5">
                     <p className="text-lg font-extrabold text-foreground leading-snug flex-1">
                       {oefeningen[huidigIndex].vraag}
                     </p>
-                    <button
-                      type="button"
-                      onClick={() => speakVraag(oefeningen[huidigIndex].vraag)}
-                      className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center transition-all active:scale-90 hover:opacity-80 mt-0.5"
-                      style={{ background: `${vakInfo.kleur}20`, color: vakInfo.kleur }}
-                      title="Lees voor"
-                    >
-                      <SpeakerHigh size={18} weight="fill" />
-                    </button>
                   </div>
 
                   {/* Multiple choice */}
@@ -339,7 +321,7 @@ export default function OefeningPage() {
                       }`}
                     >
                       <p className="font-extrabold text-sm mb-1">
-                        {isGoed ? '🎉 Super goed gedaan!' : `💡 Het goede antwoord is: ${oefeningen[huidigIndex].antwoord}`}
+                        {isGoed ? '🎉 Super goed gedaan!' : `💡 Het goede antwoord is: ${oefeningen[huidigIndex].antwoord.split('|')[0].trim()}`}
                       </p>
                       <p className="text-xs text-muted-DEFAULT leading-relaxed">
                         {oefeningen[huidigIndex].uitleg}

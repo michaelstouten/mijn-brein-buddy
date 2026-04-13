@@ -95,13 +95,16 @@ Beschrijving: ${vakBeschrijving}
 Moeilijkheidsgraad: ${niveau} van 5 (${niveau <= 2 ? 'makkelijk' : niveau <= 3 ? 'gemiddeld' : 'uitdagend'})
 ${herhaalInstructie}
 Regels:
-- Alle teksten in correct Nederlands
+- Alle teksten in correct Nederlands, inclusief correct gebruik van 'de/het', 'dit/dat' en 'deze/die' (bijv. "dit plaatje" niet "deze plaatje", want "plaatje" is een het-woord)
 - Passend bij het niveau van de groep
 - Afwisselend en leuk
 - Voor meerkeuze: altijd precies 4 opties, precies 1 correct antwoord
 - Alle 4 opties bij meerkeuze MOETEN onderling verschillend zijn — geen duplicaten
+- Bij spelling meerkeuze: de foute opties zijn altijd fout gespelde versies van hetzelfde woord (bijv. "boom" → foute opties: "booom", "bome", "bohm") — gebruik NOOIT andere echte Nederlandse woorden als afleidopties
 - Het antwoord moet exact overeenkomen met één van de opties (bij meerkeuze)
+- Als meerdere antwoorden correct kunnen zijn bij type "tekst" (bijv. "kat" én "poes"), zet ze dan gescheiden door een | in het antwoordveld: "kat|poes" — de eerste is het hoofdantwoord dat getoond wordt als feedback
 - Uitleg is kort en begrijpelijk voor een kind
+- De vraag en het antwoord moeten altijd logisch op elkaar aansluiten: als de zin "Ik eet een boterham" is, vraag dan "Wat eet ik?" en NIET "Wat eet het kind?" — gebruik dezelfde persoon/context als in de zin
 ${vak === 'rekenen' ? '- Voor rekenen: de vraag is ALTIJD een korte som zoals "7 × 8 =", "45 − 18 =" of "120 ÷ 6 =". Geen verhalen of woordproblemen.' : ''}
 
 Antwoord ALLEEN met geldige JSON in dit exacte formaat (geen uitleg, geen markdown):

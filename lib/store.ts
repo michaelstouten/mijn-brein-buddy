@@ -62,6 +62,21 @@ export const store = {
     return res.json();
   },
 
+  async wijzigKind(id: string, data: { naam?: string; leeftijd?: number; groep?: number; kleur?: string }): Promise<Kind | null> {
+    const res = await fetch(`/api/kinderen/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) return null;
+    return res.json();
+  },
+
+  async verwijderKind(id: string): Promise<boolean> {
+    const res = await fetch(`/api/kinderen/${id}`, { method: 'DELETE' });
+    return res.ok;
+  },
+
   setHuidigKind(id: string | null): void {
     if (typeof window === 'undefined') return;
     if (id) {

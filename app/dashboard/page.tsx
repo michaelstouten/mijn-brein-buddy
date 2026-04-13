@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Lightning, UserCirclePlus, ArrowRight, ChartLineUp } from '@phosphor-icons/react';
+import { Lightning, ArrowRight, ChartLineUp } from '@phosphor-icons/react';
 import { store } from '@/lib/store';
 import { Nav } from '@/components/Nav';
 import { Mascot } from '@/components/Mascot';
@@ -46,7 +46,7 @@ export default function DashboardPage() {
             Hoi, {ouder.naam.split(' ')[0]}! 👋
           </h1>
           <p className="text-sm text-muted-DEFAULT mt-1">
-            Bekijk de kinderen of voeg een nieuw kind toe.
+            Bekijk de voortgang van jouw kinderen.
           </p>
         </motion.div>
 
@@ -64,7 +64,7 @@ export default function DashboardPage() {
               Maak een profiel aan en begin meteen met oefenen.
             </p>
             <Link
-              href="/kind/nieuw"
+              href="/instellingen"
               className="inline-flex items-center gap-2 bg-primary text-white font-bold px-6 py-3 rounded-full shadow-btn hover:bg-primary-dark active:scale-95 transition-all"
             >
               Kind toevoegen
@@ -80,21 +80,6 @@ export default function DashboardPage() {
                 index={i}
               />
             ))}
-
-            {/* Add child */}
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: kinderen.length * 0.08 }}
-            >
-              <Link
-                href="/kind/nieuw"
-                className="flex items-center justify-center gap-2 bg-white rounded-3xl shadow-card p-5 font-semibold text-sm text-muted-DEFAULT hover:text-primary hover:shadow-card-hover border-2 border-dashed border-border hover:border-primary/30 transition-all"
-              >
-                <UserCirclePlus size={20} />
-                Kind toevoegen
-              </Link>
-            </motion.div>
           </div>
         )}
       </main>
