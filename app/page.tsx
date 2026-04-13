@@ -175,16 +175,30 @@ export default function HomePage() {
           <div className="flex flex-col md:flex-row items-start justify-between gap-8 mb-8">
 
             {/* Brand */}
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-3">
               <Link href="/" className="flex items-center gap-2 group">
                 <Mascot kleur="#F07329" modus="blij" grootte={28} />
                 <span className="font-extrabold text-sm text-foreground group-hover:opacity-70 transition-opacity">
                   Mijn Brein Buddy
                 </span>
               </Link>
-              <p className="text-xs text-muted-DEFAULT leading-relaxed max-w-[200px]">
-                Gemaakt met ❤️ door Papa Stouten
-              </p>
+              <div className="flex flex-col gap-1.5">
+                <p className="text-xs font-bold text-foreground uppercase tracking-wide mb-1">Contact</p>
+                <a
+                  href="https://www.instagram.com/papastouten"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-muted-DEFAULT hover:text-primary transition-colors flex items-center gap-1.5"
+                >
+                  📸 Instagram
+                </a>
+                <a
+                  href="mailto:info@mijnbreinbuddy.nl"
+                  className="text-xs text-muted-DEFAULT hover:text-primary transition-colors flex items-center gap-1.5"
+                >
+                  ✉️ info@mijnbreinbuddy.nl
+                </a>
+              </div>
             </div>
 
             {/* Colofon */}
