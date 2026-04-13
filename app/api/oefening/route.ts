@@ -10,21 +10,51 @@ const client = new Anthropic();
 
 const VAK_BESCHRIJVINGEN: Record<Vak, string> = {
   rekenen:
-    'rekensommen zoals optellen, aftrekken, vermenigvuldigen en delen. Schrijf de vraag als een korte wiskundige som (bijv. "24 ÷ 4 =", "7 × 8 =", "153 + 48 ="). Geen woordproblemen, gewoon de som.',
+    'Rekensommen zoals optellen, aftrekken, vermenigvuldigen en delen. Schrijf de vraag als een korte wiskundige som (bijv. "24 ÷ 4 =", "7 × 8 =", "153 + 48 ="). Geen woordproblemen, gewoon de som.',
   taal:
-    'Nederlandse taalopgaven zoals zinsontleding, grammatica (de/het, enkelvoud/meervoud, werkwoordsvormen), begrijpend lezen en woordbegrip.',
+    `Nederlandse taalopgaven. Gebruik uitsluitend de volgende vraagtypen:
+- De/het: "Schrijf het juiste lidwoord: ___ fiets" → antwoord: "de"
+- Enkelvoud/meervoud: "Wat is het meervoud van 'appel'?" → antwoord: "appels"
+- Werkwoordsvorm: "Vul in: Ik ___ naar school. (lopen)" → antwoord: "loop"
+- Zinsontleding (groep 6+): "Wat is het onderwerp in: 'De hond rent snel.'?" → antwoord: "de hond"
+- Begrijpend lezen: geef een korte zin, stel dan een vraag over de inhoud
+Vragen zijn altijd volledige, correcte Nederlandse zinnen. Het antwoord is één woord of een korte woordgroep.`,
   spelling:
-    'spellingsoefeningen voor Nederlandse woorden. Vraag het kind om het juiste gespelde woord te kiezen of een woord te schrijven. Gebruik moeilijkheden passend bij de groep.',
+    `Spellingsoefeningen voor Nederlandse woorden. Gebruik uitsluitend de volgende vraagtypen:
+- Schrijf het woord: "Schrijf het woord voor het tegenovergestelde van 'koud'." → antwoord: "warm"
+- Dictee-stijl: "Schrijf het woord: het dier dat 'woef' zegt." → antwoord: "hond"
+- Meerkeuze: "Welk woord is juist gespeld?" met 1 correct gespeld woord en 3 fout gespelde versies van HETZELFDE woord
+Bij meerkeuze: de 3 foute opties zijn ALTIJD fout gespelde varianten van het juiste woord (bijv. "roos" → "rooz", "rooes", "rohz") — gebruik NOOIT andere echte Nederlandse woorden als afleidopties.
+Antwoorden zijn altijd één correct gespeld Nederlands woord. Als meerdere woorden correct zijn (bijv. "hond" én "kat"), gebruik dan het | teken: "hond|kat".`,
   logica:
     `Logische denkvragen passend bij de basisschool. Gebruik uitsluitend de volgende vraagtypen:
-- Getallenreeksen: "Welk getal ontbreekt? 2, 4, 6, __, 10" → antwoord: "8"
-- Analogieën: "Kat staat tot mauwen als hond staat tot ___" → antwoord: "blaffen"
-- Categorieën/uitzondering: "Welk woord hoort er niet bij: appel, peer, wortel, banaan?" → antwoord: "wortel"
-- Redeneren: "Als alle katten dieren zijn, en Pluisje een kat is — is Pluisje dan een dier?" → antwoord: "ja"
-- Woordpatronen: "Roos, tulp, dahlia — wat is het verband?" → antwoord: "bloemen"
-Gebruik GEEN rekensommen, GEEN anatomische vragen over lichaamsdelen, GEEN vragen die fysieke handelingen vereisen.
-Vragen moeten volledig begrijpelijk zijn uit de tekst alleen, zonder afbeeldingen of fysieke aanwijzingen.
-Antwoorden zijn altijd kort en precies — één woord of getal waar mogelijk.`,
+
+1. Getallenreeks (altijd meerkeuze):
+   Vraag: "Welk getal komt hierna? 2, 4, 6, 8, ..."
+   Opties: vier getallen waarvan er één correct is
+   Antwoord: het getal dat de reeks logisch voortzet
+
+2. Uitzondering aanwijzen (altijd meerkeuze):
+   Vraag: "Welk woord hoort er niet bij: appel, peer, wortel, banaan?"
+   Opties: UITSLUITEND de woorden die in de vraag staan (appel, peer, wortel, banaan) — NOOIT een categorie-naam of extra woord toevoegen
+   Antwoord: het woord uit de lijst dat niet in de categorie past
+
+3. Analogie (altijd meerkeuze, groep 4+):
+   Vraag: "Een vis zwemt. Een vogel ___?"
+   Opties: vier werkwoorden waarvan er één correct is
+   Antwoord: het woord dat de analogie compleet maakt
+
+4. Redeneren (meerkeuze ja/nee of meerkeuze met 4 opties, groep 5+):
+   Vraag: "Tim heeft meer snoep dan Lisa. Lisa heeft meer snoep dan Sara. Wie heeft het meeste snoep?"
+   Antwoord: "Tim"
+
+5. Woordpatroon (meerkeuze, groep 3+):
+   Vraag: "Roos, tulp, madelief — wat zijn dit allemaal?"
+   Opties: vier categorieën waarvan er één correct is
+   Antwoord: de juiste categorie
+
+VERBODEN: rekensommen, lichaamsdelen, fysieke handelingen, afbeeldingen of aanwijzingen die de tekst alleen niet begrijpelijk maken.
+Vragen zijn altijd volledige correcte Nederlandse zinnen. Antwoorden zijn altijd één woord of getal.`,
 };
 
 const GROEP_BESCHRIJVINGEN: Record<number, string> = {
@@ -102,20 +132,25 @@ Vak: ${vak}
 Beschrijving: ${vakBeschrijving}
 Moeilijkheidsgraad: ${niveau} van 5 (${niveau <= 2 ? 'makkelijk' : niveau <= 3 ? 'gemiddeld' : 'uitdagend'})
 ${herhaalInstructie}
-Regels:
-- Alle teksten in correct Nederlands, inclusief correct gebruik van 'de/het', 'dit/dat' en 'deze/die' (bijv. "dit plaatje" niet "deze plaatje", want "plaatje" is een het-woord)
-- Passend bij het niveau van de groep
-- Afwisselend en leuk
-- Voor meerkeuze: altijd precies 4 opties, precies 1 correct antwoord
-- Alle 4 opties bij meerkeuze MOETEN onderling verschillend zijn — geen duplicaten
-- Bij spelling meerkeuze: de foute opties zijn altijd fout gespelde versies van hetzelfde woord (bijv. "boom" → foute opties: "booom", "bome", "bohm") — gebruik NOOIT andere echte Nederlandse woorden als afleidopties
-- Het antwoord moet exact overeenkomen met één van de opties (bij meerkeuze)
-- Als meerdere antwoorden correct kunnen zijn bij type "tekst" (bijv. "kat" én "poes"), zet ze dan gescheiden door een | in het antwoordveld: "kat|poes" — de eerste is het hoofdantwoord dat getoond wordt als feedback
-- Uitleg is kort en begrijpelijk voor een kind
-- De vraag en het antwoord moeten altijd logisch op elkaar aansluiten: als de zin "Ik eet een boterham" is, vraag dan "Wat eet ik?" en NIET "Wat eet het kind?" — gebruik dezelfde persoon/context als in de zin
-- Het antwoord moet het meest precieze woord zijn dat exact past bij de omschrijving in de vraag — als de vraag een specifiek onderdeel beschrijft (bijv. "tussen de hand en de elleboog"), dan is het antwoord het specifieke woord (bijv. "onderarm"), NIET een algemenere term (bijv. "arm")
-${vak === 'rekenen' ? '- Voor rekenen: de vraag is ALTIJD een korte som zoals "7 × 8 =", "45 − 18 =" of "120 ÷ 6 =". Geen verhalen of woordproblemen.' : ''}
-${vak === 'logica' ? '- Voor logica: gebruik ALLEEN de toegestane vraagtypen (reeksen, analogieën, categorieën, redeneren). GEEN lichaamsdelen, GEEN fysieke handelingen, GEEN rekensommen. Het antwoord is altijd een kort, eenduidig Nederlands woord of getal. Controleer dat het antwoord exact en volledig klopt met de vraag.' : ''}
+Algemene regels:
+- Alle vragen en antwoorden zijn in correct, vloeiend Nederlands
+- Gebruik correcte lidwoorden: "de/het", "dit/dat", "deze/die" (bijv. "dit plaatje" want "plaatje" is een het-woord)
+- Gebruik correcte zinsbouw: "Welk woord hoort er niet bij?" — NIET "Welk woord hoort niet bij?" (het woordje "er" is verplicht in deze constructie)
+- Elke vraag is een volledige, grammaticaal correcte Nederlandse zin eindigend op een vraagteken
+- Passend bij de leeftijd en het groepsniveau
+- Afwisselend: wissel vraagtypen af, herhaal niet hetzelfde patroon
+- Voor meerkeuze: altijd precies 4 opties, precies 1 correct antwoord, alle 4 opties zijn onderling verschillend
+- Het antwoord bij meerkeuze staat altijd exact als één van de opties
+- Als bij tekst meerdere antwoorden correct zijn, gebruik het | teken: "kat|poes" — het eerste woord is het hoofdantwoord
+- De uitleg is maximaal 1 zin, geschreven op kindniveau (max. 8-jarig begripsniveau), begint met het correcte antwoord
+- Vraag en antwoord sluiten altijd precies op elkaar aan — geen ambiguïteit
+- Het antwoord is altijd het meest specifieke, precieze woord dat past (bijv. "onderarm" niet "arm" als de vraag specifiek het deel tussen hand en elleboog beschrijft)
+${vak === 'rekenen' ? '- Voor rekenen: de vraag is ALTIJD een korte wiskundige som zoals "7 × 8 =", "45 − 18 =", "120 ÷ 6 =". Absoluut geen woordproblemen of verhalen.' : ''}
+${vak === 'logica' ? `- Voor logica: gebruik UITSLUITEND de 5 toegestane vraagtypen zoals beschreven. VERBODEN: rekensommen, lichaamsdelen, fysieke handelingen.
+- Bij "uitzondering aanwijzen": de 4 meerkeuze-opties zijn ALTIJD EN ALLEEN de woorden die in de vraag zelf staan — voeg NOOIT een categorienaam of extra woord toe als optie.
+- Controleer voor elk gegenereerde vraag: (1) is de zin grammaticaal correct? (2) heeft het antwoord precies één goede oplossing? (3) past de moeilijkheid bij de groep?` : ''}
+${vak === 'spelling' ? '- Voor spelling meerkeuze: de 3 foute opties zijn ALTIJD fout gespelde varianten van hetzelfde woord — gebruik NOOIT andere echte Nederlandse woorden als afleiding.' : ''}
+${vak === 'taal' ? '- Voor taal: elke vraag test precies één taalregel. De zinscontext en gevraagde antwoord moeten overeenkomen (vraag naar "ik" → antwoord in eerste persoon enkelvoud).' : ''}
 
 Antwoord ALLEEN met geldige JSON in dit exacte formaat (geen uitleg, geen markdown):
 [
