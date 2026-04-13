@@ -10,7 +10,7 @@ const client = new Anthropic();
 
 const VAK_BESCHRIJVINGEN: Record<Vak, string> = {
   rekenen:
-    'Rekensommen zoals optellen, aftrekken, vermenigvuldigen en delen. Schrijf de vraag als een korte wiskundige som (bijv. "24 ÷ 4 =", "7 × 8 =", "153 + 48 ="). Geen woordproblemen, gewoon de som.',
+    'ALLEEN wiskundige sommen. De vraag bestaat UITSLUITEND uit getallen en rekentekens (+, -, ×, ÷), zoals "7 × 8 =", "45 − 18 =", "120 ÷ 6 =". ABSOLUUT VERBODEN: woordproblemen, verhalen, kleuren, reeksen, categorieën, logica, meerkeuze. Formaat altijd: getal rekenteken getal =',
   taal:
     `Nederlandse taalopgaven. Gebruik uitsluitend de volgende vraagtypen:
 - De/het: "Schrijf het juiste lidwoord: ___ fiets" → antwoord: "de"
@@ -21,11 +21,12 @@ const VAK_BESCHRIJVINGEN: Record<Vak, string> = {
 Vragen zijn altijd volledige, correcte Nederlandse zinnen. Het antwoord is één woord of een korte woordgroep.`,
   spelling:
     `Spellingsoefeningen voor Nederlandse woorden. Gebruik uitsluitend de volgende vraagtypen:
-- Schrijf het woord: "Schrijf het woord voor het tegenovergestelde van 'koud'." → antwoord: "warm"
-- Dictee-stijl: "Schrijf het woord: het dier dat 'woef' zegt." → antwoord: "hond"
+- Schrijf het woord: geef een beschrijving die PRECIES ÉÉN woord als antwoord heeft. Gebruik onderscheidende kenmerken: "Schrijf het woord: het tegenovergestelde van 'koud'." → antwoord: "warm". VERBODEN: vage omschrijvingen als 'iets wat je eet' of 'een dier' — te veel woorden passen dan.
+- Dictee-stijl: noem één specifiek kenmerk dat het woord uniek identificeert: "Schrijf het woord: het dier dat 'woef' zegt." → antwoord: "hond". Of: "Schrijf het woord: de grote gele vrucht met schil die apen eten." → antwoord: "banaan"
 - Meerkeuze: "Welk woord is juist gespeld?" met 1 correct gespeld woord en 3 fout gespelde versies van HETZELFDE woord
 Bij meerkeuze: de 3 foute opties zijn ALTIJD fout gespelde varianten van het juiste woord (bijv. "roos" → "rooz", "rooes", "rohz") — gebruik NOOIT andere echte Nederlandse woorden als afleidopties.
-Antwoorden zijn altijd één correct gespeld Nederlands woord. Als meerdere woorden correct zijn (bijv. "hond" én "kat"), gebruik dan het | teken: "hond|kat".`,
+KRITIEKE REGEL: elke beschrijving mag maar één logisch correct antwoord hebben. Controleer: past er maar één woord bij de beschrijving? Zo niet, maak de beschrijving specifieker.
+Antwoorden zijn altijd één correct gespeld Nederlands woord. Als echt meerdere woorden correct zijn, gebruik dan het | teken: "hond|kat".`,
   logica:
     `Logische denkvragen passend bij de basisschool. Gebruik uitsluitend de volgende vraagtypen:
 
@@ -145,7 +146,7 @@ Algemene regels:
 - De uitleg is maximaal 1 zin, geschreven op kindniveau (max. 8-jarig begripsniveau), begint met het correcte antwoord
 - Vraag en antwoord sluiten altijd precies op elkaar aan — geen ambiguïteit
 - Het antwoord is altijd het meest specifieke, precieze woord dat past (bijv. "onderarm" niet "arm" als de vraag specifiek het deel tussen hand en elleboog beschrijft)
-${vak === 'rekenen' ? '- Voor rekenen: de vraag is ALTIJD een korte wiskundige som zoals "7 × 8 =", "45 − 18 =", "120 ÷ 6 =". Absoluut geen woordproblemen of verhalen.' : ''}
+${vak === 'rekenen' ? '- Voor rekenen: ALLEEN getallen en rekentekens (+, -, ×, ÷). ABSOLUUT VERBODEN: tekst, kleuren, patronen, categorieën, logica, meerkeuze.' : ''}
 ${vak === 'logica' ? `- Voor logica: gebruik UITSLUITEND de 5 toegestane vraagtypen zoals beschreven. VERBODEN: rekensommen, lichaamsdelen, fysieke handelingen.
 - Bij "uitzondering aanwijzen": de 4 meerkeuze-opties zijn ALTIJD EN ALLEEN de woorden die in de vraag zelf staan — voeg NOOIT een categorienaam of extra woord toe als optie.
 - Controleer voor elk gegenereerde vraag: (1) is de zin grammaticaal correct? (2) heeft het antwoord precies één goede oplossing? (3) past de moeilijkheid bij de groep?` : ''}
